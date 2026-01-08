@@ -1,59 +1,83 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# El Mallín - Hardware Store Management System 🛠️
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, robust, and open-source Point of Sale (POS) and Inventory Management System specifically designed for family-owned hardware stores (*ferreterías*). Built with the **TALL stack** (Tailwind, Alpine, Laravel, Laravel) and **React/Inertia.js**.
 
-## About Laravel
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat&logo=laravel)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat&logo=tailwind-css)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🌟 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Inventory Control:** Full CRUD with UUID-based identification, SKU management, and automatic barcode generation.
+- **Dual-Pricing Logic:** Global and item-specific profit margin calculations (Cost Price vs. Selling Price).
+- **Smart POS (Point of Sale):** A fast interface for employees to process sales, apply custom discounts, and update stock in real-time.
+- **Customer Ledger (Cuentas Corrientes):** Track regular customers, their purchases on credit, and total outstanding debt.
+- **Role-Based Access Control (RBAC):** - **Admin:** Full access to revenue analytics (monthly/yearly), profit reports, and sensitive global settings.
+  - **Employee:** Restricted access to inventory and sales operations only.
+- **Dark Mode Ready:** Fully responsive UI built with Tailwind CSS, supporting both light and dark system preferences.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Tech Stack
 
-## Learning Laravel
+- **Backend:** [Laravel 11](https://laravel.com/) (PHP 8.3+)
+- **Frontend:** [React](https://react.dev/) via [Inertia.js](https://inertiajs.com/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Database:** SQLite (local development) / MySQL (production ready)
+- **Architecture:** Monolithic with a focus on modern SPA feel using Inertia.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📊 Database Architecture
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The system uses a relational structure optimized for data integrity and business intelligence:
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+- **UUIDs:** All primary keys use UUIDs for enhanced security and URL privacy.
+- **Historical Tracking:** `sale_items` table stores the price at the time of sale to ensure financial records remain accurate even if product prices change later.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Installation & Setup
 
-## Contributing
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/ferreteria-el-mallin.git](https://github.com/YOUR_USERNAME/ferreteria-el-mallin.git)
+   cd ferreteria-el-mallin
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    Install PHP dependencies:
+    Bash
 
-## Code of Conduct
+composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Install JavaScript dependencies:
+Bash
 
-## Security Vulnerabilities
+npm install && npm run dev
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Environment Setup:
+Bash
 
-## License
+cp .env.example .env
+php artisan key:generate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Database Migration & Seeding:
+Bash
+
+php artisan migrate:fresh --seed
+
+Serve the application:
+Bash
+
+    php artisan serve
+
+🤝 Contributing
+
+Contributions are welcome! If you have ideas for new features or find bugs, feel free to open an issue or submit a pull request.
+📄 License
+
+This project is open-source software licensed under the MIT license.
+
+Developed with ❤️ for El Mallín Hardware Store.
+
+
+---
+
+### Siguiente paso sugerido:
+Ya tienes el repositorio listo y documentado. ¿Te gustaría que empecemos con el **Controller de Ventas** para manejar la lógica de descontar stock y sumar deuda a los clientes, o prefieres trabajar en la **Interfaz del Carrito de Compras** en React?
