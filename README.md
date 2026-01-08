@@ -78,6 +78,3 @@ Developed with ❤️ for El Mallín Hardware Store.
 
 
 ---
-
-### Siguiente paso sugerido:
-Ya tienes el repositorio listo y documentado. ¿Te gustaría que empecemos con el **Controller de Ventas** para manejar la lógica de descontar stock y sumar deuda a los clientes, o prefieres trabajar en la **Interfaz del Carrito de Compras** en React?
