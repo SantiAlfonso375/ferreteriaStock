@@ -5,7 +5,7 @@ export default function CardDescritpion({
     iconAlt = "Icon",
 }) {
     return (
-        <div className="bg-white/30 dark:bg-grackdrop-blur-md dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-white/30 dark:bg-grackdrop-blur-md dark:bg-gray-700 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-center mb-4">
                 <img
                     src={iconPath}

@@ -1,5 +1,6 @@
+import ActionElement from "@/Components/ActionElement";
 import CardDescritpion from "@/Components/CardDescription";
-import { Link, Head } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const appName = "Ferretería El Mallin"; // Nombre de tu app
@@ -28,7 +29,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
         <>
             <Head title="Bienvenido a Ferretería El Mallin" />
 
-            <div className="relative min-h-screen bg-gray-100 dark:bg-gray-900 selection:bg-blue-500 selection:text-white">
+            <div className="relative min-h-screen bg-gray-100 dark:bg-gray-800 selection:bg-blue-500 selection:text-white">
                 {/* Contenido principal - Hero Section */}
                 <div className="flex items-center justify-center min-h-screen flex-col p-6 text-center">
                     <img
@@ -45,26 +46,14 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     {/* Botones de Login / Register */}
                     {!auth.user ? (
                         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
-                            <Link
-                                href={route("login")}
-                                className="px-8 py-3 bg-blue-600 backdrop-blur-[2px] text-white font-bold text-lg rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-                            >
-                                Iniciar Sesión
-                            </Link>
-                            <Link
-                                href={route("register")}
-                                className="px-8 py-3 bg-gray-200 text-gray-800 font-bold text-lg rounded-lg shadow-lg hover:bg-gray-300 transition duration-300 transform hover:scale-105"
-                            >
-                                Registrarse
-                            </Link>
+                            <ActionElement href="login" text="Iniciar Sesión" />
+                            <ActionElement href="register" text="Registrarse" />
                         </div>
                     ) : (
-                        <Link
-                            href={route("dashboard")}
-                            className="px-8 py-3 bg-blue-600 backdrop-blur-[2px] text-white font-bold text-lg rounded-lg shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-                        >
-                            Ir al Inventario de El Mallín
-                        </Link>
+                        <ActionElement
+                            href="dashboard"
+                            text="Ir al Inventario"
+                        />
                     )}
 
                     {/* Sección de Características / Detalles */}
@@ -82,7 +71,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     </section>
 
                     {/* Footer */}
-                    <div className="flex justify-center mt-12 px-0 sm:items-center sm:justify-between">
+                    <footer className="flex justify-center mt-12 px-0 sm:items-center sm:justify-between">
                         <div className="ms-4 text-center text-md text-gray-500 dark:text-gray-400 sm:text-end sm:ms-0">
                             Developed by{" "}
                             <a
@@ -95,7 +84,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             </a>
                             <spam> &copy;2026</spam>
                         </div>
-                    </div>
+                    </footer>
                 </div>
             </div>
         </>
