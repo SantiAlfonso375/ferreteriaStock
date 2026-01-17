@@ -43,12 +43,12 @@ export default function Dashboard({ products = [] }) {
                 <div className="px-6 mb-8">
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-[#8e8e93]">🔍</span>
+                            <span className="text-[#8e8e93] mr-4">🔍</span>
                         </div>
                         <input
                             type="text"
                             placeholder="Buscar herramientas..."
-                            className="w-full bg-[#1c1c1e] border-none text-[17px] rounded-[12px] py-3 pl-10 pr-12 focus:ring-2 focus:ring-[#0a84ff] placeholder:text-[#48484a] transition-all"
+                            className="w-full bg-transparent border-t-slate-900 text-[17px] rounded-[12px] py-3 pl-10 pr-12 focus:ring-0 focus:ring-[#0a84ff] placeholder:text-[#8e8e93] transition-all"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -84,6 +84,9 @@ export default function Dashboard({ products = [] }) {
                                     </p>
                                 </div>
                             ))}
+                            <section className="flex justify-center items-center py-10">
+                                No se encontraron más productos
+                            </section>
                         </div>
                     </div>
                 )}
@@ -107,7 +110,7 @@ export default function Dashboard({ products = [] }) {
                             icon="🏷️"
                             iconBgColor="bg-[#0a84ff]" // Azul
                             title="Inventario"
-                            description="Ver stock"
+                            description="Actualizar stock, precios..."
                             href="inventory.update"
                             className="!rounded-[20px] !bg-[#1c1c1e] !border-none !shadow-none active:scale-95 transition-transform"
                         />

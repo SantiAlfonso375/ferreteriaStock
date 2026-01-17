@@ -1,100 +1,156 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import Checkbox from "@/Components/Checkbox";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
-
-        post(route('login'), {
-            onFinish: () => reset('password'),
+        post(route("login"), {
+            onFinish: () => reset("password"),
         });
     };
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title="Iniciar Sesión" />
 
-            {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
+            <div className="min-h-screen bg-[#0f131a] flex flex-col justify-center items-center p-6 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
+                {/* Logo o Icono de Llave */}
+                <div className="mb-8 w-20 h-20 bg-gradient-to-tr from-[#0a84ff] to-[#5e5ce6] rounded-[22px] flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <span className="text-4xl">🔐</span>
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                <div className="w-full max-w-md">
+                    <h1 className="text-3xl font-bold text-white text-center mb-2 tracking-tight">
+                        Ferretería El Mallín
+                    </h1>
+                    <p className="text-[#8e8e93] text-center mb-8">
+                        Ingresa tus credenciales
+                    </p>
 
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
-                        />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
-                    </label>
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Forgot your password?
-                        </Link>
+                    {status && (
+                        <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-[14px] text-sm font-medium text-green-400 text-center">
+                            {status}
+                        </div>
                     )}
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
+                    {/* TARJETA */}
+                    <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[24px] p-8 shadow-2xl">
+                        <form onSubmit={submit} className="space-y-6">
+                            {/* Input Email */}
+                            <div>
+                                <label className="block text-[13px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-2 ml-1">
+                                    Correo Electrónico
+                                </label>
+                                <div className="relative">
+                                    <TextInput
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        value={data.email}
+                                        className="w-full !bg-white/5 !border-white/10 !text-white !rounded-[12px] !py-3 focus:!ring-[#0a84ff] focus:!bg-white/10 transition-all placeholder:text-[#48484a]"
+                                        autoComplete="username"
+                                        isFocused={true}
+                                        onChange={(e) =>
+                                            setData("email", e.target.value)
+                                        }
+                                        placeholder="ejemplo@correo.com"
+                                    />
+                                </div>
+                                <InputError
+                                    message={errors.email}
+                                    className="mt-2 text-[#ff453a]"
+                                />
+                            </div>
+
+                            {/* Input Password */}
+                            <div>
+                                <label className="block text-[13px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-2 ml-1">
+                                    Contraseña
+                                </label>
+                                <TextInput
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    value={data.password}
+                                    className="w-full !bg-white/5 !border-white/10 !text-white !rounded-[12px] !py-3 focus:!ring-[#0a84ff] focus:!bg-white/10 transition-all"
+                                    autoComplete="current-password"
+                                    onChange={(e) =>
+                                        setData("password", e.target.value)
+                                    }
+                                    placeholder="••••••••"
+                                />
+                                <InputError
+                                    message={errors.password}
+                                    className="mt-2 text-[#ff453a]"
+                                />
+                            </div>
+
+                            {/* Remember me & Forgot Password */}
+                            <div className="flex items-center justify-between">
+                                <label className="flex items-center cursor-pointer group">
+                                    <Checkbox
+                                        name="remember"
+                                        checked={data.remember}
+                                        onChange={(e) =>
+                                            setData(
+                                                "remember",
+                                                e.target.checked,
+                                            )
+                                        }
+                                        className="!rounded-full !border-white/20 !bg-white/5 text-[#0a84ff] focus:ring-[#0a84ff]"
+                                    />
+                                    <span className="ms-2 text-sm text-[#8e8e93] group-hover:text-white transition-colors">
+                                        Recordarme
+                                    </span>
+                                </label>
+
+                                {canResetPassword && (
+                                    <Link
+                                        href={route("password.request")}
+                                        className="text-sm text-[#0a84ff] hover:text-[#5e5ce6] transition-colors font-medium"
+                                    >
+                                        ¿Olvidaste tu clave?
+                                    </Link>
+                                )}
+                            </div>
+
+                            {/* Botón de Acción */}
+                            <div className="pt-2">
+                                <PrimaryButton
+                                    className="w-full !bg-[#0a84ff] hover:!bg-[#007aff] !py-4 !rounded-[15px] !text-lg !font-bold !justify-center !border-none shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
+                                    disabled={processing}
+                                >
+                                    {processing
+                                        ? "Accediendo..."
+                                        : "Iniciar Sesión"}
+                                </PrimaryButton>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Footer del Formulario */}
+                    <p className="mt-8 text-center text-[#48484a] text-sm">
+                        ¿No tienes cuenta?{" "}
+                        <Link
+                            href={route("register")}
+                            className="text-[#0a84ff] font-semibold"
+                        >
+                            Regístrate aquí
+                        </Link>
+                    </p>
                 </div>
-            </form>
+            </div>
         </GuestLayout>
     );
 }

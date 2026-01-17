@@ -48,7 +48,7 @@ export default function Index({ products }) {
                                     setData("name", e.target.value)
                                 }
                                 className="w-full bg-transparent border-none p-0 text-[17px] focus:ring-0 placeholder:text-[#48484a]"
-                                placeholder="Ej: Martillo de Goma"
+                                placeholder="Ej: Bulón de Cabeza Hexagonal 20 x 30 mm ..."
                             />
                             {errors.name && (
                                 <p className="text-[#ff453a] text-[12px] mt-1">

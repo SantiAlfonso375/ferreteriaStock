@@ -71,13 +71,13 @@ export default function Update({ products }) {
                 {/* Buscador estilo Search Bar */}
                 <section className="relative">
                     <div className="relative flex items-center bg-[#1c1c1e] rounded-xl px-3 py-2 border border-[#38383a]">
-                        <span className="material-symbols-outlined text-[#8e8e93] text-[20px] mr-2">
-                            search
+                        <span className="material-symbols-outlined bg-[#ff9f0a] text-[#1c1c1e] text-[20px] mr-5 p-1 rounded-lg ">
+                            Buscar
                         </span>
                         <input
                             type="text"
                             className="bg-transparent border-none p-0 w-full text-[17px] focus:ring-0 placeholder:text-[#8e8e93]"
-                            placeholder="Buscar por nombre o SKU..."
+                            placeholder="Buscar por nombre o Código..."
                             value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);
