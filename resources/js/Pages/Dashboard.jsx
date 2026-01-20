@@ -100,15 +100,15 @@ export default function Dashboard({ products = [] }) {
                         <QuickActionCard
                             variant="dark"
                             icon="🛒"
-                            iconBgColor="bg-[#32d74b]"
+                            iconBgColor="bg-white"
                             title="Venta"
                             description="Nueva factura"
-                            href="#"
+                            href="sales.cart"
                             className="!rounded-[20px] !bg-[#1c1c1e] !border-none !shadow-none active:scale-95 transition-transform"
                         />
                         <QuickActionCard
                             icon="🏷️"
-                            iconBgColor="bg-[#0a84ff]" // Azul
+                            iconBgColor="bg-[#0a84ff]"
                             title="Inventario"
                             description="Actualizar stock, precios..."
                             href="inventory.update"
@@ -116,15 +116,15 @@ export default function Dashboard({ products = [] }) {
                         />
                         <QuickActionCard
                             icon="👤"
-                            iconBgColor="bg-[#af52de]" // Violeta
+                            iconBgColor="bg-[#af52de]"
                             title="Clientes"
                             description="Registrar"
-                            href="#"
+                            href="account.index"
                             className="!rounded-[20px] !bg-[#1c1c1e] !border-none !shadow-none active:scale-95 transition-transform"
                         />
                         <QuickActionCard
                             icon="📦"
-                            iconBgColor="bg-[#ff9f0a]" // Naranja
+                            iconBgColor="bg-[#ff9f0a]"
                             title="Cargar"
                             description="Nuevos productos"
                             href="products.index"

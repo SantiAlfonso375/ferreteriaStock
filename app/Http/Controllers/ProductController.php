@@ -59,7 +59,6 @@ class ProductController extends Controller
 
         $percentage = $request->percentage;
 
-        // Uso DB::raw para que la base de datos lo haga de una sola vez
         Product::query()->update([
             "price" => DB::raw("price * (1 + ($percentage / 100))"),
         ]);
@@ -76,6 +75,54 @@ class ProductController extends Controller
             "products" => Product::all(),
         ]);
     }
+
+    // --- NUEVAS FUNCIONES PARA EL CARRITO Y VENTAS ---
+
+    // Carga la vista del carrito (Ventas)
+    public function cartPage()
+    {
+        return Inertia::render("Inventory/Cart", [
+            "products" => Product::where("stock", ">", 0)->get(),
+        ]);
+    }
+
+    // Procesa la venta y descuenta stock
+    public function processSale(Request $request)
+    {
+        $request->validate([
+            "cart" => "required|array|min:1",
+        ]);
+
+        $cart = $request->input("cart");
+
+        try {
+            DB::transaction(function () use ($cart) {
+                foreach ($cart as $item) {
+                    $product = Product::findOrFail($item["id"]);
+
+                    // Verifico si hay stock suficiente antes de restar
+                    if ($product->stock < $item["quantity"]) {
+                        throw new \Exception(
+                            "Stock insuficiente para: " . $product->name,
+                        );
+                    }
+
+                    // Resto el stock
+                    $product->decrement("stock", $item["quantity"]);
+                }
+            });
+
+            return redirect()
+                ->route("dashboard")
+                ->with("success", "Venta realizada con éxito");
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(["error" => $e->getMessage()]);
+        }
+    }
+
+    // --- UTILIDADES ---
 
     // Generador de códigos únicos (Formato ART-XXXXXXXX)
     private function generateUniqueSku()

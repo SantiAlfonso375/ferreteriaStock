@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\AccountController;
 use App\Models\Product;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -36,31 +38,60 @@ Route::middleware("auth")->group(function () {
         "profile.destroy",
     );
 
-    // RUTAS DE LA FERRETERÍA
+    // Inventario y Productos
     Route::get("/productos", [ProductController::class, "index"])->name(
         "products.index",
     );
     Route::post("/productos", [ProductController::class, "store"])->name(
         "products.store",
     );
-
-    // Ruta para procesar la actualización de un producto (Desde el formulario de Inventario)
     Route::put("/productos/{product}", [
         ProductController::class,
         "update",
     ])->name("products.update");
-
-    // Ruta para ver la página de actualizar inventario (Buscador + Formulario)
     Route::get("/inventario/actualizar", [
         ProductController::class,
         "inventoryPage",
     ])->name("inventory.update");
-
-    // Ruta para el ajuste total de todos los los productos (Desde precios por porcentaje)
     Route::post("/productos/ajuste-masivo", [
         ProductController::class,
         "bulkUpdatePrice",
     ])->name("products.bulkUpdate");
+
+    // Caja / Ventas
+    Route::get("/ventas/nueva", [ProductController::class, "cartPage"])->name(
+        "sales.cart",
+    );
+    Route::post("/ventas/procesar", [
+        ProductController::class,
+        "processSale",
+    ])->name("sales.process");
+
+    // Clientes y Cuenta Corriente
+    Route::resource("clients", ClientController::class);
+
+    // --- RUTAS DE ACCOUNT / CUENTA CORRIENTE ---
+    Route::get("/cuenta-corriente", [AccountController::class, "index"])->name(
+        "account.index",
+    );
+
+    // Ruta para registrar deuda (Retirar herramientas)
+    Route::post("/clientes/{client}/retirar", [
+        AccountController::class,
+        "registerDebt",
+    ])->name("clients.add-debt");
+
+    // Ruta para registrar pago (Entrega de efectivo)
+    Route::post("/clientes/{client}/pagar", [
+        AccountController::class,
+        "registerPayment",
+    ])->name("clients.add-payment");
+
+    // Ruta para generar el PDF (Apunta a downloadPdf que es el nombre en tu controlador)
+    Route::get("/clientes/{client}/pdf", [
+        AccountController::class,
+        "downloadPdf",
+    ])->name("clients.pdf");
 });
 
 require __DIR__ . "/auth.php";
