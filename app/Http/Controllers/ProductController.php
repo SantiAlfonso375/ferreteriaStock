@@ -34,9 +34,36 @@ class ProductController extends Controller
         return redirect()->route("products.index");
     }
 
-    // Actualizar un solo producto (Desde formulario de Update.jsx)
+    /**
+     * Actualizar producto o TODO el inventario
+     */
     public function update(Request $request, Product $product)
     {
+        // Caso 1: Actualización Masiva por Porcentaje
+        if ($request->bulk) {
+            $request->validate([
+                "price" => "required|numeric|min:0",
+            ]);
+
+            $oldPrice = $product->price;
+            $newPrice = $request->price;
+
+            if ($oldPrice > 0) {
+                $multiplier = $newPrice / $oldPrice;
+
+                DB::transaction(function () use ($multiplier) {
+                    Product::query()->update([
+                        "price" => DB::raw("ROUND(price * $multiplier)"),
+                    ]);
+                });
+
+                return redirect()
+                    ->route("inventory.update")
+                    ->with("success", "Aumento masivo aplicado correctamente");
+            }
+        }
+
+        // Caso 2: Actualización Normal de un solo producto
         $validated = $request->validate([
             "name" => "required|string|max:255",
             "price" => "required|numeric|min:0",
@@ -50,25 +77,7 @@ class ProductController extends Controller
             ->with("success", "Producto actualizado");
     }
 
-    // AJUSTE TOTAL: Aumentar precios de TODO el inventario al toque
-    public function bulkUpdatePrice(Request $request)
-    {
-        $request->validate([
-            "percentage" => "required|numeric",
-        ]);
-
-        $percentage = $request->percentage;
-
-        Product::query()->update([
-            "price" => DB::raw("price * (1 + ($percentage / 100))"),
-        ]);
-
-        return redirect()
-            ->back()
-            ->with("success", "Ajuste del $percentage% aplicado");
-    }
-
-    // Carga la página de inventario con todos los productos para el buscador
+    // Carga la página de inventario con todos los productos
     public function inventoryPage()
     {
         return Inertia::render("Inventory/Update", [
@@ -76,9 +85,8 @@ class ProductController extends Controller
         ]);
     }
 
-    // --- NUEVAS FUNCIONES PARA EL CARRITO Y VENTAS ---
+    // --- FUNCIONES PARA EL CARRITO Y VENTAS ---
 
-    // Carga la vista del carrito (Ventas)
     public function cartPage()
     {
         return Inertia::render("Inventory/Cart", [
@@ -86,7 +94,6 @@ class ProductController extends Controller
         ]);
     }
 
-    // Procesa la venta y descuenta stock
     public function processSale(Request $request)
     {
         $request->validate([
@@ -100,14 +107,12 @@ class ProductController extends Controller
                 foreach ($cart as $item) {
                     $product = Product::findOrFail($item["id"]);
 
-                    // Verifico si hay stock suficiente antes de restar
                     if ($product->stock < $item["quantity"]) {
                         throw new \Exception(
                             "Stock insuficiente para: " . $product->name,
                         );
                     }
 
-                    // Resto el stock
                     $product->decrement("stock", $item["quantity"]);
                 }
             });
@@ -124,7 +129,6 @@ class ProductController extends Controller
 
     // --- UTILIDADES ---
 
-    // Generador de códigos únicos (Formato ART-XXXXXXXX)
     private function generateUniqueSku()
     {
         do {

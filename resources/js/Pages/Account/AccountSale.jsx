@@ -32,7 +32,6 @@ export default function AccountSale({ products, clients }) {
         }
     }, [notification]);
 
-    // Función para abrir el PDF manualmente
     const handleOpenReceipt = (clientId) => {
         window.open(route("clients.pdf", clientId), "_blank");
     };
@@ -58,40 +57,53 @@ export default function AccountSale({ products, clients }) {
             .slice(0, 5);
     }, [productSearch, products]);
 
+    // --- LÓGICA DEL CARRITO ---
     const addToCart = (product) => {
         const existing = cart.find((i) => i.id === product.id);
-        if (existing && existing.quantity >= product.stock) {
-            setNotification({
-                msg: `Sin stock: solo hay ${product.stock}`,
-                type: "error",
-            });
-            return;
-        }
         if (existing) {
-            setCart(
-                cart.map((i) =>
-                    i.id === product.id
-                        ? { ...i, quantity: i.quantity + 1 }
-                        : i,
-                ),
-            );
+            updateQuantity(product.id, 1);
         } else {
+            if (product.stock <= 0) {
+                setNotification({ msg: "Producto sin stock", type: "error" });
+                return;
+            }
             setCart([...cart, { ...product, quantity: 1 }]);
         }
         setProductSearch("");
     };
 
+    const updateQuantity = (id, delta) => {
+        setCart((prevCart) =>
+            prevCart.map((item) => {
+                if (item.id === id) {
+                    const newQty = item.quantity + delta;
+                    // Validar stock máximo
+                    if (newQty > item.stock) {
+                        setNotification({
+                            msg: `Máximo disponible: ${item.stock}`,
+                            type: "error",
+                        });
+                        return item;
+                    }
+                    // Si la cantidad llega a 0, se mantiene en 1 (o podrías eliminarlo)
+                    return { ...item, quantity: Math.max(1, newQty) };
+                }
+                return item;
+            }),
+        );
+    };
+
+    const removeFromCart = (id) => {
+        setCart(cart.filter((i) => i.id !== id));
+    };
+
     const totalCart = cart.reduce((acc, i) => acc + i.price * i.quantity, 0);
 
-    // --- SOLO GUARDA LA DEUDA ---
     const handleSaveDebt = () => {
         if (cart.length === 0) return;
         router.post(
             route("clients.add-debt", selectedClient.id),
-            {
-                items: cart,
-                total_amount: totalCart,
-            },
+            { items: cart, total_amount: totalCart },
             {
                 onSuccess: () => {
                     setCart([]);
@@ -105,15 +117,12 @@ export default function AccountSale({ products, clients }) {
         );
     };
 
-    // --- SOLO REGISTRA EL PAGO ---
     const handleRegisterPayment = () => {
         const amount = prompt(`¿Cuánto va a pagar ${selectedClient.name}?`);
         if (!amount || isNaN(amount) || parseFloat(amount) <= 0) return;
         router.post(
             route("clients.add-payment", selectedClient.id),
-            {
-                amount: parseFloat(amount),
-            },
+            { amount: parseFloat(amount) },
             {
                 onSuccess: () => {
                     setNotification({
@@ -229,7 +238,7 @@ export default function AccountSale({ products, clients }) {
                                 />
                                 <input
                                     className="w-full bg-[#2c2c2e] rounded-xl p-4 focus:ring-1 focus:ring-[#0a84ff] outline-none text-lg"
-                                    placeholder="Teléfono (Ej: 54911...)"
+                                    placeholder="Teléfono"
                                     value={newClient.phone}
                                     onChange={(e) =>
                                         setNewClient({
@@ -247,9 +256,7 @@ export default function AccountSale({ products, clients }) {
                             </div>
                         ) : (
                             <div className="bg-[#1c1c1e] rounded-xl flex items-center px-4 py-3 border border-white/10">
-                                <span className="text-gray-500 mr-2 text-xl">
-                                    🔍
-                                </span>
+                                <span className="mr-2 text-xl">🔍</span>
                                 <input
                                     className="bg-transparent border-none p-0 w-full text-white placeholder:text-gray-500 focus:ring-0 text-lg"
                                     placeholder="Buscar..."
@@ -300,19 +307,19 @@ export default function AccountSale({ products, clients }) {
                                         {selectedClient.name}
                                     </h2>
                                 </div>
-                                {/* BOTÓN DE PDF MANUAL*/}
-                                <section className="flex flex-col gap-2">
+                                <div className="flex flex-col items-center gap-1">
                                     <button
                                         onClick={() =>
                                             handleOpenReceipt(selectedClient.id)
                                         }
                                         className="bg-white/10 p-3 rounded-full active:scale-90 transition-all"
-                                        title="Ver Resumen PDF"
                                     >
                                         📄
                                     </button>
-                                    <span>Generar PDF</span>
-                                </section>
+                                    <span className="text-[10px] font-bold text-gray-400">
+                                        PDF
+                                    </span>
+                                </div>
                             </div>
                             <div className="mt-2 inline-block bg-black/40 px-4 py-3 rounded-2xl border border-white/5">
                                 <p className="text-[10px] text-gray-400 uppercase font-bold">
@@ -373,28 +380,66 @@ export default function AccountSale({ products, clients }) {
                                         ))}
                                     </div>
                                 </div>
-                                {cart.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="bg-[#1c1c1e] p-4 rounded-2xl flex justify-between items-center border border-white/5"
-                                    >
-                                        <p className="font-bold">
-                                            {item.name} x {item.quantity}
-                                        </p>
-                                        <button
-                                            onClick={() =>
-                                                setCart(
-                                                    cart.filter(
-                                                        (i) => i.id !== item.id,
-                                                    ),
-                                                )
-                                            }
-                                            className="text-[#ff453a] text-xs font-black"
+
+                                {/* CARRITO CON CONTROLES DE CANTIDAD */}
+                                <div className="space-y-2">
+                                    {cart.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="bg-[#1c1c1e] p-4 rounded-2xl border border-white/5"
                                         >
-                                            QUITAR
-                                        </button>
-                                    </div>
-                                ))}
+                                            <div className="flex justify-between items-center mb-3">
+                                                <p className="font-bold text-[17px]">
+                                                    {item.name}
+                                                </p>
+                                                <button
+                                                    onClick={() =>
+                                                        removeFromCart(item.id)
+                                                    }
+                                                    className="text-[#ff453a] text-xs font-black px-2"
+                                                >
+                                                    QUITAR
+                                                </button>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex items-center bg-black/30 rounded-xl p-1 border border-white/5">
+                                                    <button
+                                                        onClick={() =>
+                                                            updateQuantity(
+                                                                item.id,
+                                                                -1,
+                                                            )
+                                                        }
+                                                        className="w-10 h-10 flex items-center justify-center text-2xl font-bold text-[#0a84ff] active:bg-white/10 rounded-lg"
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className="w-12 text-center font-black text-lg">
+                                                        {item.quantity}
+                                                    </span>
+                                                    <button
+                                                        onClick={() =>
+                                                            updateQuantity(
+                                                                item.id,
+                                                                1,
+                                                            )
+                                                        }
+                                                        className="w-10 h-10 flex items-center justify-center text-2xl font-bold text-[#0a84ff] active:bg-white/10 rounded-lg"
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                                <p className="font-black text-[#30d158] text-lg">
+                                                    $
+                                                    {(
+                                                        item.price *
+                                                        item.quantity
+                                                    ).toLocaleString()}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         ) : (
                             <div className="space-y-3 pb-44">
@@ -407,11 +452,7 @@ export default function AccountSale({ products, clients }) {
                                             <p className="text-[11px] text-gray-400 font-bold mb-1">
                                                 {new Date(
                                                     m.created_at,
-                                                ).toLocaleDateString("es-AR", {
-                                                    day: "2-digit",
-                                                    month: "2-digit",
-                                                    year: "2-digit",
-                                                })}
+                                                ).toLocaleDateString()}
                                             </p>
                                             <p className="font-bold text-lg text-white leading-tight">
                                                 {m.description}
@@ -446,7 +487,7 @@ export default function AccountSale({ products, clients }) {
                             >
                                 $
                                 {view === "debt"
-                                    ? totalCart
+                                    ? totalCart.toLocaleString()
                                     : selectedClient.balance || "0.00"}
                             </span>
                         </div>
