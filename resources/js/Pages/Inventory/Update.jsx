@@ -280,12 +280,12 @@ export default function Update({ products, flash }) {
                     </form>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 text-[#8e8e93] animate-pulse">
-                        <span className="material-symbols-outlined text-[48px] mb-2">
-                            search_check
-                        </span>
-                        <p className="text-[17px]">
+                        <span className="flex justify-center material-symbols-outlined text-[30px]">
                             Busca una herramienta para editar
-                        </p>
+                        </span>
+                        {/* <p className="text-[17px]">
+                            Busca una herramienta para editar
+                        </p>*/}
                     </div>
                 )}
             </main>
