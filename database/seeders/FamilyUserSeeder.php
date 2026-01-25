@@ -41,11 +41,17 @@ class FamilyUserSeeder extends Seeder
         ];
 
         foreach ($members as $member) {
-            User::updateOrCreate([
-                "name" => $member["name"],
-                "password" => $passwordDefault,
-                "role" => $member["role"],
-            ]);
+            User::updateOrCreate(
+                [
+                    // Buscamos al usuario solo por su email
+                    "email" => $member["email"],
+                ],
+                [
+                    "name" => $member["name"],
+                    "password" => $passwordDefault,
+                    "role" => $member["role"],
+                ],
+            );
         }
     }
 }
