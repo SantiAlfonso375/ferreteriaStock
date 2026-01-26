@@ -5,6 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -19,6 +20,7 @@ export default function Login({ status, canResetPassword }) {
             onFinish: () => reset("password"),
         });
     };
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <GuestLayout>
@@ -27,7 +29,9 @@ export default function Login({ status, canResetPassword }) {
             <div className="min-h-screen bg-[#0f131a] flex flex-col justify-center items-center p-6 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
                 {/* Logo o Icono de Llave */}
                 <div className="mb-8 w-20 h-20 bg-gradient-to-tr from-[#0a84ff] to-[#5e5ce6] rounded-[22px] flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <span className="text-4xl">🔐</span>
+                    <span className="text-4xl">
+                        <Link href="/">🔐</Link>
+                    </span>
                 </div>
 
                 <div className="w-full max-w-md">
@@ -78,18 +82,34 @@ export default function Login({ status, canResetPassword }) {
                                 <label className="block text-[13px] font-semibold text-[#8e8e93] uppercase tracking-wider mb-2 ml-1">
                                     Contraseña
                                 </label>
-                                <TextInput
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    value={data.password}
-                                    className="w-full !bg-white/5 !border-white/10 !text-white !rounded-[12px] !py-3 focus:!ring-[#0a84ff] focus:!bg-white/10 transition-all"
-                                    autoComplete="current-password"
-                                    onChange={(e) =>
-                                        setData("password", e.target.value)
-                                    }
-                                    placeholder="••••••••"
-                                />
+                                <div className="relative">
+                                    <TextInput
+                                        id="password"
+                                        // Si showPassword es true, el tipo es "text" (se ve). Si es false, es "password" (puntos).
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
+                                        name="password"
+                                        value={data.password}
+                                        className="w-full !bg-white/5 !border-white/10 !text-white !rounded-[12px] !py-3 !pr-12 focus:!ring-[#0a84ff] transition-all"
+                                        autoComplete="current-password"
+                                        onChange={(e) =>
+                                            setData("password", e.target.value)
+                                        }
+                                        placeholder="••••••••"
+                                    />
+
+                                    {/* Este botón cambia el estado de true a false y viceversa */}
+                                    <button
+                                        type="button" // IMPORTANTE: para que no envíe el formulario al tocarlo
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-xl opacity-60 hover:opacity-100 transition-opacity"
+                                    >
+                                        {showPassword ? "🙈" : "👁️"}
+                                    </button>
+                                </div>
                                 <InputError
                                     message={errors.password}
                                     className="mt-2 text-[#ff453a]"
@@ -115,14 +135,14 @@ export default function Login({ status, canResetPassword }) {
                                     </span>
                                 </label>
 
-                                {canResetPassword && (
+                                {/* {canResetPassword && (
                                     <Link
                                         href={route("password.request")}
                                         className="text-sm text-[#0a84ff] hover:text-[#5e5ce6] transition-colors font-medium"
                                     >
                                         ¿Olvidaste tu clave?
                                     </Link>
-                                )}
+                                )}*/}
                             </div>
 
                             {/* Botón de Acción */}
@@ -140,6 +160,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
 
                     {/* Footer del Formulario */}
+                    {/* comentar despues asi registro los usuario y depues comento esto y las rutas de auth.php*/}
                     <p className="mt-8 text-center text-[#48484a] text-sm">
                         ¿No tienes cuenta?{" "}
                         <Link
