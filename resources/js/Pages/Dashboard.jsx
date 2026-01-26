@@ -7,6 +7,9 @@ export default function Dashboard({ products = [] }) {
     const { auth } = usePage().props;
     const [search, setSearch] = useState("");
 
+    const stockAlerts = products.filter((product) => product.stock <= 5);
+    const urgentCount = stockAlerts.filter((p) => p.stock === 0).length;
+
     const filteredProducts = products.filter(
         (product) =>
             product.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -38,7 +41,6 @@ export default function Dashboard({ products = [] }) {
                         Ferretería El Mallín
                     </p>
                 </div>
-
                 {/* BUSCADOR ESTILO */}
                 <div className="px-6 mb-8">
                     <div className="relative group">
@@ -61,7 +63,6 @@ export default function Dashboard({ products = [] }) {
                         </div>
                     </div>
                 </div>
-
                 {/* RESULTADOS DE BÚSQUEDA FLOTANTES */}
                 {search.length > 0 && (
                     <div className="px-6 absolute z-20 w-full -mt-6">
@@ -90,7 +91,6 @@ export default function Dashboard({ products = [] }) {
                         </div>
                     </div>
                 )}
-
                 {/* GRID DE ACCIONES RÁPIDAS */}
                 <div className="px-6 mb-10">
                     <h2 className="text-[13px] text-[#8e8e93] uppercase font-semibold mb-3 ml-1 tracking-wider">
@@ -132,68 +132,70 @@ export default function Dashboard({ products = [] }) {
                         />
                     </div>
                 </div>
-
-                {/* ALERTAS DE REPOSICIÓN */}
+                {/* ALERTAS DE REPOSICIÓN DINÁMICAS */}
                 <div className="px-6">
                     <div className="flex justify-between items-end mb-3 ml-1">
                         <h2 className="text-[13px] text-[#8e8e93] uppercase font-semibold tracking-wider">
                             Alertas de Stock
                         </h2>
-                        <span className="text-[#ff453a] text-[12px] font-bold">
-                            3 URGENTES
-                        </span>
+                        {urgentCount > 0 && (
+                            <span className="text-[#ff453a] text-[12px] font-bold animate-pulse">
+                                {urgentCount} URGENTES
+                            </span>
+                        )}
                     </div>
 
                     <div className="bg-[#1c1c1e] rounded-[14px] overflow-hidden divide-y divide-[#38383a]">
-                        {[
-                            {
-                                name: "Destornillador Phillips #2",
-                                pos: "Pasillo A • Estante 4",
-                                stock: "0 un.",
-                                status: "Sin Stock",
-                                color: "#ff453a",
-                            },
-                            {
-                                name: "Bolsas Cemento (50kg)",
-                                pos: "Sector Materiales",
-                                stock: "2 un.",
-                                status: "Bajo Stock",
-                                color: "#ff9f0a",
-                            },
-                        ].map((item, i) => (
-                            <div
-                                key={i}
-                                className="p-4 flex items-center justify-between active:bg-[#2c2c2e] transition-colors"
-                            >
-                                <div className="flex items-center gap-4">
+                        {stockAlerts.length > 0 ? (
+                            stockAlerts.slice(0, 5).map((product) => {
+                                // Mostramos solo las primeras 5 alertas
+                                const isOut = product.stock === 0;
+                                const color = isOut ? "#ff453a" : "#ff9f0a";
+
+                                return (
                                     <div
-                                        className="w-2 h-2 rounded-full"
-                                        style={{ backgroundColor: item.color }}
-                                    ></div>
-                                    <div>
-                                        <h4 className="text-[17px] font-medium leading-tight">
-                                            {item.name}
-                                        </h4>
-                                        <p className="text-[13px] text-[#8e8e93] mt-0.5">
-                                            {item.pos}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p
-                                        className="text-[15px] font-semibold"
-                                        style={{ color: item.color }}
+                                        key={product.id}
+                                        className="p-4 flex items-center justify-between active:bg-[#2c2c2e] transition-colors"
                                     >
-                                        {item.status}
-                                    </p>
-                                    <p className="text-[13px] text-[#8e8e93]">
-                                        {item.stock}
-                                    </p>
-                                </div>
+                                        <div className="flex items-center gap-4">
+                                            <div
+                                                className="w-2 h-2 rounded-full"
+                                                style={{
+                                                    backgroundColor: color,
+                                                }}
+                                            ></div>
+                                            <div>
+                                                <h4 className="text-[17px] font-medium leading-tight">
+                                                    {product.name}
+                                                </h4>
+                                                <p className="text-[13px] text-[#8e8e93] mt-0.5">
+                                                    SKU: {product.sku}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p
+                                                className="text-[15px] font-semibold"
+                                                style={{ color: color }}
+                                            >
+                                                {isOut
+                                                    ? "Sin Stock"
+                                                    : "Bajo Stock"}
+                                            </p>
+                                            <p className="text-[13px] text-[#8e8e93]">
+                                                {product.stock} un.
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="p-8 text-center text-[#8e8e93] text-sm italic">
+                                ✅ Todo el stock está al día
                             </div>
-                        ))}
+                        )}
                     </div>
-                </div>
+                </div>{" "}
             </div>
         </AuthenticatedLayout>
     );

@@ -14,8 +14,8 @@ class FamilyUserSeeder extends Seeder
 
         $members = [
             [
-                "name" => "Claudio (Papá)",
-                "email" => "Claudio@ferreteria.com",
+                "name" => "Claudio",
+                "email" => "claudio@ferreteria.com",
                 "role" => "admin",
             ],
             [
@@ -24,7 +24,7 @@ class FamilyUserSeeder extends Seeder
                 "role" => "admin",
             ],
             [
-                "name" => "Silvia (Mamá)",
+                "name" => "Silvia",
                 "email" => "silvia@ferreteria.com",
                 "role" => "admin",
             ],
