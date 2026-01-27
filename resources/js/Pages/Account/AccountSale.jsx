@@ -306,6 +306,18 @@ export default function AccountSale({ products, clients }) {
                                     <h2 className="text-3xl font-bold">
                                         {selectedClient.name}
                                     </h2>
+                                    <div className="flex flex-col mt-2 gap-1 text-[11px] text-gray-500 font-bold">
+                                        {selectedClient.dni && (
+                                            <span>
+                                                DNI: {selectedClient.dni}
+                                            </span>
+                                        )}
+                                        {selectedClient.phone && (
+                                            <span className="text-[#30d158]">
+                                                Teléfono: {selectedClient.phone}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col items-center gap-1">
                                     <button
@@ -321,9 +333,9 @@ export default function AccountSale({ products, clients }) {
                                     </span>
                                 </div>
                             </div>
-                            <div className="mt-2 inline-block bg-black/40 px-4 py-3 rounded-2xl border border-white/5">
+                            <div className="flex flex-col mt-2 gap-2  bg-black/40 px-4 py-3 rounded-2xl border border-white/5">
                                 <p className="text-[10px] text-gray-400 uppercase font-bold">
-                                    Saldo Adeudado
+                                    Saldo Adeudado:
                                 </p>
                                 <p className="text-2xl font-black text-[#ff453a]">
                                     ${selectedClient.balance || "0.00"}
@@ -351,7 +363,7 @@ export default function AccountSale({ products, clients }) {
                                 <div className="bg-[#1c1c1e] rounded-2xl p-2 border border-white/10">
                                     <input
                                         className="w-full bg-transparent border-none p-4 text-lg focus:ring-0"
-                                        placeholder="🔍 Buscar producto..."
+                                        placeholder="Buscar producto..."
                                         value={productSearch}
                                         onChange={(e) =>
                                             setProductSearch(e.target.value)
@@ -498,7 +510,7 @@ export default function AccountSale({ products, clients }) {
                                     : handleRegisterPayment
                             }
                             disabled={view === "debt" && cart.length === 0}
-                            className={`w-full py-5 rounded-[1.5rem] font-black text-xl active:scale-95 disabled:opacity-20 ${view === "debt" ? "bg-[#0a84ff]" : "bg-[#30d158]"}`}
+                            className={`w-full py-4 rounded-[1.5rem] font-black text-xl active:scale-95 disabled:opacity-20 ${view === "debt" ? "bg-[#0a84ff]" : "bg-[#30d158]"}`}
                         >
                             {view === "debt" ? "GUARDAR" : "COBRAR"}
                         </button>
