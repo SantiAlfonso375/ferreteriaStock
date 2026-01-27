@@ -161,7 +161,7 @@ export default function Login({ status, canResetPassword }) {
 
                     {/* Footer del Formulario */}
                     {/* comentar despues asi registro los usuario y depues comento esto y las rutas de auth.php*/}
-                    <p className="mt-8 text-center text-[#48484a] text-sm">
+                    {/* <p className="mt-8 text-center text-[#48484a] text-sm">
                         ¿No tienes cuenta?{" "}
                         <Link
                             href={route("register")}
@@ -169,7 +169,7 @@ export default function Login({ status, canResetPassword }) {
                         >
                             Regístrate aquí
                         </Link>
-                    </p>
+                    </p>*/}
                 </div>
             </div>
         </GuestLayout>

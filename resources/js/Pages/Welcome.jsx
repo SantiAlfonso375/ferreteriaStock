@@ -63,11 +63,11 @@ export default function Welcome({ auth }) {
                                     text="Iniciar Sesión"
                                     className="!bg-[#0a84ff] !text-white !rounded-[15px] !py-4 !text-lg !font-semibold !shadow-lg active:scale-95 transition-transform"
                                 />
-                                <ActionElement
+                                {/* <ActionElement
                                     href="register"
                                     text="Registrarse"
                                     className="!bg-white/10 !text-white !backdrop-blur-md !border !border-white/10 !rounded-[15px] !py-4 !text-lg !font-semibold active:bg-white/20 transition-all"
-                                />
+                                />*/}
                             </>
                         ) : (
                             <ActionElement
