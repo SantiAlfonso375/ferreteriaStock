@@ -110,7 +110,7 @@ class ProductController extends Controller
                     if ($product->stock < $item["quantity"]) {
                         throw new \Exception(
                             "Stock insuficiente para: " . $product->name,
-                        );
+                            );
                     }
 
                     $product->decrement("stock", $item["quantity"]);
@@ -120,7 +120,8 @@ class ProductController extends Controller
             return redirect()
                 ->route("dashboard")
                 ->with("success", "Venta realizada con éxito");
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return redirect()
                 ->back()
                 ->withErrors(["error" => $e->getMessage()]);
