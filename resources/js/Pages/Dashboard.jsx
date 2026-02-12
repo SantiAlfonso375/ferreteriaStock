@@ -130,6 +130,14 @@ export default function Dashboard({ products = [] }) {
                             href="products.index"
                             className="!rounded-[20px] !bg-[#1c1c1e] !border-none !shadow-none active:scale-95 transition-transform"
                         />
+                        <QuickActionCard
+                            icon="🚚"
+                            iconBgColor="bg-[#30d158]"
+                            title="Pedidos"
+                            description="Generar PDF"
+                            href="orders.index"
+                            className="!rounded-[20px] !bg-[#1c1c1e] !border-none !shadow-none active:scale-95 transition-transform"
+                        />
                     </div>
                 </div>
                 {/* ALERTAS DE REPOSICIÓN DINÁMICAS */}
@@ -147,7 +155,7 @@ export default function Dashboard({ products = [] }) {
 
                     <div className="bg-[#1c1c1e] rounded-[14px] overflow-hidden divide-y divide-[#38383a]">
                         {stockAlerts.length > 0 ? (
-                            stockAlerts.slice(0, 5).map((product) => {
+                            stockAlerts.slice(0, 100).map((product) => {
                                 // Mostramos solo las primeras 5 alertas
                                 const isOut = product.stock === 0;
                                 const color = isOut ? "#ff453a" : "#ff9f0a";

@@ -12,7 +12,10 @@ export default function Index({ products }) {
     const submit = (e) => {
         e.preventDefault();
         post(route("products.store"), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                reset();
+                window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Producto agregado con éxito", type: "success" } }));
+            },
         });
     };
 
