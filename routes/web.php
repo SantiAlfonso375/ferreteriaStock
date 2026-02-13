@@ -11,16 +11,16 @@ use Inertia\Inertia;
 
 Route::get("/", function () {
     return Inertia::render("Welcome", [
-        "canLogin" => Route::has("login"),
-        "canRegister" => false, // leater: value false
-        "laravelVersion" => Application::VERSION,
-        "phpVersion" => PHP_VERSION,
+    "canLogin" => Route::has("login"),
+    "canRegister" => false, // leater: value false
+    "laravelVersion" => Application::VERSION,
+    "phpVersion" => PHP_VERSION,
     ]);
 })->name("Welcome");
 
 Route::get("/dashboard", function () {
     return Inertia::render("Dashboard", [
-        "products" => Product::all(),
+    "products" => Product::all(),
     ]);
 })
     ->middleware(["auth", "verified"])
@@ -28,42 +28,42 @@ Route::get("/dashboard", function () {
 
 Route::middleware("auth")->group(function () {
     // Perfil
-    Route::get("/profile", [ProfileController::class, "edit"])->name(
+    Route::get("/profile", [ProfileController::class , "edit"])->name(
         "profile.edit",
     );
-    Route::patch("/profile", [ProfileController::class, "update"])->name(
+    Route::patch("/profile", [ProfileController::class , "update"])->name(
         "profile.update",
     );
-    Route::delete("/profile", [ProfileController::class, "destroy"])->name(
+    Route::delete("/profile", [ProfileController::class , "destroy"])->name(
         "profile.destroy",
     );
 
     // Inventario y Productos
-    Route::get("/productos", [ProductController::class, "index"])->name(
+    Route::get("/productos", [ProductController::class , "index"])->name(
         "products.index",
     );
-    Route::post("/productos", [ProductController::class, "store"])->name(
+    Route::post("/productos", [ProductController::class , "store"])->name(
         "products.store",
     );
     Route::put("/productos/{product}", [
-        ProductController::class,
+        ProductController::class ,
         "update",
     ])->name("products.update");
     Route::get("/inventario/actualizar", [
-        ProductController::class,
+        ProductController::class ,
         "inventoryPage",
     ])->name("inventory.update");
     Route::post("/productos/ajuste-masivo", [
-        ProductController::class,
+        ProductController::class ,
         "bulkUpdatePrice",
     ])->name("products.bulkUpdate");
 
     // Caja / Ventas
-    Route::get("/ventas/nueva", [ProductController::class, "cartPage"])->name(
+    Route::get("/ventas/nueva", [ProductController::class , "cartPage"])->name(
         "sales.cart",
     );
     Route::post("/ventas/procesar", [
-        ProductController::class,
+        ProductController::class ,
         "processSale",
     ])->name("sales.process");
 
@@ -71,27 +71,38 @@ Route::middleware("auth")->group(function () {
     Route::resource("clients", ClientController::class);
 
     // --- RUTAS DE ACCOUNT / CUENTA CORRIENTE ---
-    Route::get("/cuenta-corriente", [AccountController::class, "index"])->name(
+    Route::get("/cuenta-corriente", [AccountController::class , "index"])->name(
         "account.index",
     );
 
     // Ruta para registrar deuda (Retirar herramientas)
     Route::post("/clientes/{client}/retirar", [
-        AccountController::class,
+        AccountController::class ,
         "registerDebt",
     ])->name("clients.add-debt");
 
     // Ruta para registrar pago (Entrega de efectivo)
     Route::post("/clientes/{client}/pagar", [
-        AccountController::class,
+        AccountController::class ,
         "registerPayment",
     ])->name("clients.add-payment");
 
     // Ruta para generar el PDF (Apunta a downloadPdf que es el nombre en tu controlador)
     Route::get("/clientes/{client}/pdf", [
-        AccountController::class,
+        AccountController::class ,
         "downloadPdf",
     ])->name("clients.pdf");
+
+    // --- RUTAS DE PEDIDOS ---
+    Route::get("/pedidos", [
+        \App\Http\Controllers\OrderController::class ,
+        "index",
+    ])->name("orders.index");
+    Route::post("/pedidos/pdf", [
+        \App\Http\Controllers\OrderController::class ,
+        "downloadPdf",
+    ])->name("orders.pdf");
 });
+
 
 require __DIR__ . "/auth.php";

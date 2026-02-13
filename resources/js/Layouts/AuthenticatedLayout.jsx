@@ -4,6 +4,8 @@ import NavLink from "@/Components/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
+import GlobalLoader from "@/Components/GlobalLoader";
+import Toast from "@/Components/Toast";
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -171,6 +173,8 @@ export default function AuthenticatedLayout({ header, children }) {
             )}
 
             <main>{children}</main>
+            <GlobalLoader />
+            <Toast />
         </div>
     );
 }

@@ -8,7 +8,7 @@ export default function AccountSale({ products, clients }) {
     const [cart, setCart] = useState([]);
     const [view, setView] = useState("debt");
     const [isCreating, setIsCreating] = useState(false);
-    const [notification, setNotification] = useState(null);
+
 
     const [newClient, setNewClient] = useState({
         name: "",
@@ -25,12 +25,7 @@ export default function AccountSale({ products, clients }) {
         }
     }, [clients]);
 
-    useEffect(() => {
-        if (notification) {
-            const timer = setTimeout(() => setNotification(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [notification]);
+
 
     const handleOpenReceipt = (clientId) => {
         window.open(route("clients.pdf", clientId), "_blank");
@@ -64,7 +59,7 @@ export default function AccountSale({ products, clients }) {
             updateQuantity(product.id, 1);
         } else {
             if (product.stock <= 0) {
-                setNotification({ msg: "Producto sin stock", type: "error" });
+                window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Producto sin stock", type: "error" } }));
                 return;
             }
             setCart([...cart, { ...product, quantity: 1 }]);
@@ -79,10 +74,7 @@ export default function AccountSale({ products, clients }) {
                     const newQty = item.quantity + delta;
                     // Validar stock máximo
                     if (newQty > item.stock) {
-                        setNotification({
-                            msg: `Máximo disponible: ${item.stock}`,
-                            type: "error",
-                        });
+                        window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: `Máximo disponible: ${item.stock}`, type: "error" } }));
                         return item;
                     }
                     // Si la cantidad llega a 0, se mantiene en 1 (o podrías eliminarlo)
@@ -108,10 +100,7 @@ export default function AccountSale({ products, clients }) {
                 onSuccess: () => {
                     setCart([]);
                     setView("history");
-                    setNotification({
-                        msg: "Compra guardada",
-                        type: "success",
-                    });
+                    window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Compra guardada", type: "success" } }));
                 },
             },
         );
@@ -125,10 +114,7 @@ export default function AccountSale({ products, clients }) {
             { amount: parseFloat(amount) },
             {
                 onSuccess: () => {
-                    setNotification({
-                        msg: "Pago registrado con éxito",
-                        type: "success",
-                    });
+                    window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Pago registrado con éxito", type: "success" } }));
                 },
             },
         );
@@ -136,18 +122,12 @@ export default function AccountSale({ products, clients }) {
 
     const handleCreateClient = () => {
         if (!newClient.name)
-            return setNotification({
-                msg: "Nombre obligatorio",
-                type: "error",
-            });
+            return window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Nombre obligatorio", type: "error" } }));
         router.post(route("clients.store"), newClient, {
             onSuccess: () => {
                 setIsCreating(false);
                 setNewClient({ name: "", dni: "", phone: "" });
-                setNotification({
-                    msg: "Cliente creado con éxito",
-                    type: "success",
-                });
+                window.dispatchEvent(new CustomEvent('toast-show', { detail: { message: "Cliente creado con éxito", type: "success" } }));
             },
         });
     };
@@ -156,15 +136,7 @@ export default function AccountSale({ products, clients }) {
         <div className="bg-black min-h-screen text-white font-sans pb-44">
             <Head title="Cuaderno Digital" />
 
-            {notification && (
-                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-full max-w-xs px-4">
-                    <div
-                        className={`${notification.type === "error" ? "bg-[#ff453a]" : "bg-[#30d158]"} text-white p-4 rounded-2xl shadow-2xl text-center font-bold border border-white/20`}
-                    >
-                        {notification.msg}
-                    </div>
-                </div>
-            )}
+
 
             <header className="sticky top-0 z-50 bg-black/70 backdrop-blur-2xl border-b border-white/10 px-4 pt-10 pb-4">
                 <div className="max-w-md mx-auto flex items-center justify-between">
