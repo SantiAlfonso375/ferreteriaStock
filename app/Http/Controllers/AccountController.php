@@ -17,8 +17,8 @@ class AccountController extends Controller
         return Inertia::render("Account/AccountSale", [
             "clients" => Client::with([
                 "movements" => function ($query) {
-                    $query->latest();
-                },
+            $query->latest();
+        },
             ])->get(),
             "products" => Product::where("stock", ">", 0)->get(),
         ]);
